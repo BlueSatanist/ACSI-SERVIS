@@ -1,0 +1,23 @@
+/* Общие стили для ссылки, чтобы она выглядела как кнопка */
+.btn-link {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Стили для ссылки, когда на нее наведен курсор */
+.btn-link:hover {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}

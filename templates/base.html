@@ -1,0 +1,288 @@
+{% load static %}
+{% load goods_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "deps/css/bootstrap/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "deps/css/my_css.css" %}">
+    <!-- Стиль footer-a для главной страницы -->
+    {% block css %}
+
+    {% endblock %}
+    <!-- Favicons for different platforms -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static "deps/favicon/apple-touch-icon.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static "deps/favicon/favicon-32x32.png" %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "deps/favicon/favicon-16x16.png" %}">
+    <link rel="manifest" href="{% static "deps/favicon/site.webmanifest" %}">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand" href="{% url "main:index" %}">Главная</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url "main:about" %}">О нас</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Корзина</a>
+                        </li>
+                        {% if not user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link  text-white" href="{% url "user:login" %}">Войти</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item dropdown ">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Мой профиль
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item  text-white" href="{% url "user:profile" %}">Личный кабинет</a>
+                                    </li>
+                                    {% if user.is_admin or user.is_staff %}
+                                        <li><a class="dropdown-item  text-white" href="{% url "admin:index" %}">Админ панель</a></li>
+                                    {% endif %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item  text-white" href="{% url "user:logout" %}">Выйти</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <form class="d-flex" role="search" action="{% url "catalog:search" %}" method="get" onsubmit="return checkSearch()">
+                        <input id="searchInput" class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success text-white search-button" type="submit">Поиск</button>
+                    </form>
+                    
+                    <script>
+                        function checkSearch() {
+                            var searchInput = document.getElementById("searchInput").value.trim();
+                            if (searchInput === "") {
+                                return false; // Предотвращаем отправку пустой формы
+                            }
+                            return true;
+                        }
+                    </script>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <!-- Условный оператор для отображения каталога только на страницах, отличных от index.html -->
+        {% if not is_index_page %}
+            <!-- Каталог и корзина с фиксированным расположением на странице -->
+            <div class="row mt-1 position-fixed z-3">
+                <!-- Каталог -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Каталог
+                        <img class="mx-1" src="{% static "deps/icons/grid-fill.svg" %}" alt="Catalog Icon" width="16"
+                            height="16">
+                    </button>
+                    <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
+                        {% tag_categories as categories %}
+                        {% for category in categories %}
+                            <li><a class="dropdown-item text-white" href="{% url "catalog:category" category.slug %}">{{category.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Значек корзины, вызывает модальное окно -->
+                {% block modal_cart %}{% endblock  %}
+                <!-- Закончилась разметка модального окна -->
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Контент -->
+    <section>
+        <div class="container">
+            <div class="row mt-1">
+                {% if not is_index_page %}
+                    <div class="col-lg-2">
+                        <!-- Пустой блок на Ваше усмотрение -->
+                    </div>
+                {% endif %}
+                <div class="{% if not is_index_page %}col-lg-10{% else %}col-lg-12{% endif %}">
+                    <!-- Контент на странице -->
+                    {% include "includes/notifications.html" %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% block footer %}{% endblock %}
+
+    <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
+    <script src="{% static "deps/js/jquery-ajax.js" %}"></script>
+    <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+</body>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Минимальная высота всей страницы */
+    }
+    
+    footer {
+        margin-top: auto; /* Футер всегда будет прижат к нижней части страницы */
+    }
+
+    /* Добавим стили для баннера */
+    .banner {
+        background-color: #f8f9fa;
+        padding: 50px 0;
+        text-align: center;
+    }
+    .banner h2 {
+        font-size: 36px;
+        color: #343a40; /* черный */
+    }
+    .banner p {
+        font-size: 18px;
+        color: #6c757d;
+        margin-top: 20px;
+    }
+    .cta-button {
+        background-color: #343a40; /* черный */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 20px;
+        display: inline-block;
+    }
+
+    /* Добавим стили для блока с контентом */
+    section {
+        padding-top: 10px; /* Добавим верхний отступ для контента */
+    }
+
+    .col-lg-10 {
+        max-width: 100%; /* Максимальная ширина блока контента */
+        margin-right: auto; /* Отодвинем блок контента влево */
+        margin-left: auto; /* Отодвинем блок контента вправо */
+        padding-left: 15px; /* Добавим внутренний отступ слева */
+        padding-right: 15px; /* Добавим внутренний отступ справа */
+    }
+    .custom-content {
+        width: 90%; /* Настройте ширину по вашему усмотрению */
+        margin: 0 auto; /* Центрируем блок по горизонтали */
+    }
+
+    /* Стили для блока с услугами */
+    .services {
+        text-align: center;
+        margin-top: 50px;
+    }
+    .service {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .service-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #343a40;
+    }
+    .service-description {
+        font-size: 16px;
+        color: #6c757d;
+        margin-top: 10px;
+    }
+
+    .advantage {
+        margin-bottom: 20px;
+    }
+    .advantage-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+        color: #007bff;
+    }
+    /* Стили для блока с контактами */
+    .contact-info {
+        text-align: center;
+        margin-top: 50px;
+    }
+    .contact-info p {
+        font-size: 18px;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .btn:hover {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+
+    .dropdown-item:hover {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    } 
+
+    .dropdown:hover .btn {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+    
+    .dropdown:hover .dropdown-menu {
+        background-color: #212529;
+        border-color: #212529;
+    }
+    
+    .dropdown-menu .dropdown-item:hover {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+    
+    .dropdown-menu .dropdown-item:focus {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+    
+    .dropdown:focus .btn {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+    
+    .dropdown:focus .dropdown-menu {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+
+    .cta-button:hover {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+
+    .search-button {
+        border-color: rgb(99, 128, 172); /* Цвет обводки кнопки Поиск */
+    }
+
+    .search-button:hover {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+</style>
+
+</html>

@@ -1,0 +1,59 @@
+body {
+  
+  background-image: url("../images/bg-image.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: cover;
+  height: 100%;
+}
+
+
+.dropdown-toggle::after {
+  content: none;
+}
+
+
+.card-img-top {
+  width: 100%; /* Растягиваем изображение по ширине родительского элемента */
+  height: auto; /* Сохраняем пропорции изображения */
+  max-height: 200px; /* Фиксируем максимальную высоту */
+  object-fit: cover; /* Заполнение изображения */
+  object-position: center; /* Центрируем изображение */
+  background-color: white; /* Белый фон */
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 8px  rgb(99, 128, 172);
+}
+
+.button {
+  color: rgb(99, 128, 172);
+}
+
+
+
+.product_id {
+  color: rgb(99, 128, 172);
+  font-size: 15px;
+}
+
+.badge.bg-warning.text-dark {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px  rgb(99, 128, 172);
+}
+
+.badge-banner {
+  top: 80%;
+  border-radius: 15px;
+  font-size: 0.7rem;
+}
+
+
+
