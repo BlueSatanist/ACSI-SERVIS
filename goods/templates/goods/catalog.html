@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+{% load goods_tags %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+
+{% block content %}
+<div class="row">
+    <!-- Форма фильтров -->
+    <div class="dropdown mb-2 ">
+        <button id="filterButton" class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Фильтры
+    </button>
+
+        <form action="{% if request.GET.q %}{% url "catalog:search" %}{% else %}{% url "catalog:category" slug_url %}{% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+            <div class="form-check text-white mx-3">
+                <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == 'on' %}checked{% endif %}>
+                {% if request.GET.q %}
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                {% endif %}
+                <label class="form-check-label" for="flexCheckDefault">
+                    Товары по акции
+                </label>
+            </div>
+            <p class="text-white mx-3 mt-3">Сортировать:</p>
+            <div class="form-check text-white mx-3">
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default"
+                {% if not request.GET.order_by or request.GET.order_by == 'default' %}checked{% endif %}>
+                <label class="form-check-label" for="flexRadioDefault1">
+                    По умолчанию
+                </label>
+            </div>
+            <div class="form-check text-white mx-3">
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price" 
+                {% if request.GET.order_by == 'price' %}checked{% endif %}>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    От дешевых к дорогим
+                </label>
+            </div>
+            <div class="form-check text-white mx-3">
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price"
+                {% if request.GET.order_by == '-price' %}checked{% endif %}>
+                <label class="form-check-label" for="flexRadioDefault3">
+                    От дорогих к дешевым
+                </label>
+            </div>
+            <button type="submit" class="btn btn-dark mx-3 mt-3">Применить</button>
+        </form>
+    </div>
+    <!-- Отображение товаров или сообщение о их отсутствии -->
+    <div class="col-md-12">
+        {% if goods %}
+            <!-- Отображение товаров -->
+            {% for product in goods %}
+                <!-- Ваш код для отображения каждого товара -->
+            {% endfor %}
+        {% else %}
+            <!-- Сообщение о отсутствии товаров -->
+            <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+            <h3 class="mt-4">Товары по вашему запросу не найдены.</h3p>
+        {% endif %}
+    </div>
+    <script>
+        document.getElementById("filterButton").addEventListener("click", function() {
+            this.style.backgroundColor = "rgb(99, 128, 172)"; // Задаём зелёный цвет кнопке при клике
+            this.style.color = "white"; // Задаём белый цвет текста кнопке при клике
+        });
+    </script>
+
+    {% if request.GET.q %}
+    <h3 class="mt-4">Результаты поиска по запросу {{ request.GET.q }}</h3>
+    {% if not goods %}
+        <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+        <h2 class="mt-4">По запросу ничего не найдено</h2>
+    {% endif %}
+    {% endif %}
+    {% for product in goods %}
+<!-- Карта товара -->
+<div class="col-lg-4 col-md-6 p-4">
+    <div class="card border-primary rounded ">
+        {% if product.image %}
+        <div class="d-flex justify-content-center align-items-center" style="height: 200px;"> <!-- Увеличьте высоту до вашего желания -->
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="object-fit: contain; width: 100%; height: 100%;">
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-center align-items-center" style="height: 200px;"> <!-- Увеличьте высоту до вашего желания -->
+            <img src="{% static "deps/images/Not found image.png" %}" class="card-img-top" alt="..." style="object-fit: contain; width: 100%; height: 100%;">
+        </div>
+        {% endif %}
+        <div class="card-body ">
+            <a href="{% url "catalog:product" product.slug %}" style="text-decoration: none; color: black;">
+                <p class="card-title calculator-link" style="font-weight: bold; font-size: larger;">
+                    {% autoescape off %}
+                    {% if product.headline %}
+                    {{ product.headline }}
+                    {% else %}
+                    {{ product.name }}
+                    {% endif %}
+                    {% endautoescape %}
+                </p>
+            </a>
+
+            <p class="card-text">
+                {% autoescape off %}
+                {% if product.bodyline %}
+                {{product.bodyline|truncatechars:100}}
+                {% else %}
+                {{ product.description|truncatechars:35 }}
+                {% endif %}
+                {% endautoescape %}
+            </p>
+            <p class="product_id">id: {{ product.display_id }}</p>
+            <div class="d-flex justify-content-between">
+                {% if product.discount %}
+                <p><s>{{product.price}}</s> ₽</p>
+                <p><strong>{{ product.sell_price }} ₽</strong></p>
+                <span class="badge bg-warning text-dark">Скидка {{ product.discount }} %</span>
+                {% else %}
+                <p><strong>{{ product.price }} ₽</strong></p>
+                {% endif %}
+                <a href="{% url "cart:cart_add" %}" class="btn add-to-cart" data-product-id="{{ product.id }}">
+                    {% csrf_token %}
+                    <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon" width="32" height="32">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endfor %}
+
+
+
+</div>
+<!-- Пагинация -->
+{% if goods %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center my-4">
+            <div class="custom-shadowmy_shad d-flex">
+
+                <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}{% else %}#{% endif %}">Назад</a>
+                </li>
+
+                {% for page in goods.paginator.page_range %}
+                {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+                    <li class="page-item {% if goods.number == page %} active {% endif %}">
+                        <a class="page-link pagepage" href="?{% change_params page=page %}">{{ page }}</a>
+                    </li>
+                {% endif %}
+                {% endfor %}
+
+
+                <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if goods.has_next %}?{% change_params page=goods.next_page_number %}{% else %}#{% endif %}">Следующая</a>
+                </li>
+            </div>
+        </ul>
+    </nav>
+{% endif %}
+{% endblock  %}
+
+
+
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="text-white mb-1 " >&#xfeff Часы работы:</p>
+                <p class="text-white mb-1">Пн 09:00–18:00</p>
+                <p class="text-white mb-1">Вт  &#xfeff 09:00–18:00</p>
+                <p class="text-white mb-1">Ср 09:00–18:00</p>
+                <p class="text-white mb-1">Чт  09:00–18:00</p>
+                <p class="text-white mb-1">Пт 09:00–18:00</p>
+                <p class="text-white mb-1">Сб &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff –     </p>
+                <p class="text-white mb-1">Вс &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff –     </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <p class="m-0 text-white">+7 (383) 213‒24‒11</p>
+                <p class="m-0 text-white">+7 (383) 201‒05‒00 <br> <br><br><br><br><br>© АКСИ-СЕРВИС <br>  Торгово-сервисная компания</p>
+            </div>
+            <div class="col-md-2">
+                <p class="text-white mb-0   text-end">Улица Челюскинцев, 18/2 604 офис; 6 этаж</p>
+                <p class="text-white mb-0  text-end">Челюскинский ж/м, Железнодорожный район, Новосибирск, 630132</p>
+            </div>
+        
+            <div class="col-md-1">
+                <div class="row">
+                    <div class="col-12 map-container">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ae13020f42f19cac0baf8cb2e2c63bd72f46dc090149e32b3deb348337ef10f2e&amp;width=315&amp;height=215&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+<style>
+
+    .page-item.active .page-link {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+
+    .btn btn-primary {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+    }
+    .form-check-input:checked {
+        background-color: rgb(99, 128, 172);
+    }
+
+    .btn.btn-primary:active {
+        background-color: rgb(99, 128, 172);
+        border-color: rgb(99, 128, 172);
+        color: #fff; /* Цвет текста при нажатии */
+    }
+    
+    .btn-success:hover {
+        color: #fff;
+        background-color: rgb(99, 128, 172);
+        border-color: grey;
+    }
+    .card {
+        border: none;
+        box-shadow: 0 2px 4px  rgb(99, 128, 172);
+        transition: transform 0.3s, box-shadow 0.3s; /* Добавляем плавные анимации для transform и box-shadow */
+    }
+    
+    .card:hover {
+        border: none;
+        transform: scale(1.05); /* Немного увеличиваем карточку при наведении */
+        box-shadow: 0 4px 8px  rgb(99, 128, 172);
+         /* Добавляем небольшую тень */
+    }
+    
+</style>
+
+{% endblock  %}
+
+

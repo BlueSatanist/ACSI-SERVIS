@@ -1,0 +1,673 @@
+{% extends "base.html" %}
+{% load static %}
+{% load goods_tags %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+    <style>
+        /* Добавим стили для баннера */
+        .banner {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+            text-align: center;
+            border-radius: 15px;
+        }
+        .banner h2 {
+            font-size: 36px;
+            color: #343a40;
+        }
+        .banner p {
+            font-size: 18px;
+            color: #6c757d;
+            margin-top: 20px;
+        }
+        .cta-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        /* Стили для блока с услугами */
+        .services {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .service {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .service-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #343a40;
+        }
+        .service-description {
+            font-size: 16px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        .read-more {
+            text-decoration: none;
+            color: rgb(99, 128, 172);
+            font-weight: bold;
+        }
+        .read-more {
+            color: rgb(99, 128, 172); /* Цвет текста при наведении */
+        }
+        .advantage {
+            margin-bottom: 20px;
+        }
+
+
+        /* Увеличим ширину контейнеров и разместим их левее */
+        .container {
+            max-width: 1200px; /* Увеличим максимальную ширину контейнера */
+            margin: 0 auto; /* Центрируем контейнер на странице */
+            padding: 0 15px; /* Добавим внутренние отступы слева и справа */
+        }
+        
+        /* Левее разместим блок с категориями */
+        .row-categories {
+            margin-right: auto; /* Отодвинем категории влево */
+            margin-left: 0; /* Сбросим отступ слева */
+        }
+        
+        /* Разместим блок с баннером слева */
+        .banner {
+            text-align: left; /* Выравняем текст баннера по левому краю */
+            margin-right: auto; /* Отодвинем баннер влево */
+            margin-left: 0; /* Сбросим отступ слева */
+        }
+        
+        /* Сделаем блок с контактами шире и разместим его левее */
+        .contact-info {
+            max-width: 1200px; /* Увеличим максимальную ширину блока с контактами */
+            margin: 0 auto; /* Центрируем блок на странице */
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin-right: auto; /* Отодвигаем блок контактов влево */
+            margin-left: 0; /* Сбросим отступ слева */
+        }
+        
+        /* Сделаем блок с услугами шире и разместим его левее */
+        .services {
+            max-width: 1600px; /* Увеличим максимальную ширину блока с услугами */
+            margin: 0 auto; /* Центрируем блок на странице */
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin-right: auto; /* Отодвигаем блок с услугами влево */
+            margin-left: 0; /* Сбросим отступ слева */
+        }
+        
+
+
+        .advantage-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: rgb(99, 128, 172);
+        }
+        /* Стили для блока с контактами */
+        .contact-info {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .contact-info p {
+            font-size: 18px;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        body {
+            position: relative;
+            margin: 0;
+            padding-bottom: 260px; /* высота футера */
+        }
+    
+        .content::after {
+            content: '';
+            display: block;
+            height: 200px; /* высота футера */
+        }
+    
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 250px; /* высота футера */
+        }
+
+        .ban {
+            text-align: center; /* Выравниваем текст по центру */
+        }
+        
+        .ban h2 {
+            font-size: 48px;
+            color: #343a40; /* Цвет текста */
+        }
+        
+        .ban p {
+            font-size: 24px; /* Задаем большой размер шрифта для абзаца */
+            color: #6c757d; /* Цвет текста */
+            margin-top: 20px; /* Добавляем верхний отступ */
+        }
+        
+
+    </style>
+{% endblock %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+
+{% block content %}
+
+    <!-- Баннер -->
+    <div class="ban">
+        <h2>Добро пожаловать в АКСИ-СЕРВИС!</h2>
+        <p>Мы специализируемся на ремонте оргтехники и обеспечении ее надежной работы.</p>
+        <a href="#services" style="text-decoration: none;" class="cta-button">Узнать больше о наших услугах</a>
+        <br>
+        <br>
+        
+    </div>
+    <div class="container">
+        <div class="row">
+            <!-- Блок для первой карточки -->
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-4">
+                {% if categories %}
+                    <a href="{% url "catalog:category" categories.0.slug %}" class="text-decoration-none text-dark">
+                        <div class="card shadow-sm first-card my_shad">
+                            <div class="card-body">
+                                <h5 class="card-title"><br></h5>
+                            </div>
+                            <div class="first-card-img-wrapper">
+                                {% if categories.0.image %}
+                                    <img src="{{ categories.0.image.url }}" class="card-img-top img-fluid" alt="{{ categories.0.name }}">
+                                {% else %}
+                                    <div class="placeholder-image">No Image Available</div>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"><br><br>{{ categories.0.name }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+            <!-- Блок для двух рядов с карточками -->
+            <div class="col-lg-8 col-md-6 col-sm-6 col-12">
+                <div class="row">
+                    {% for category in categories|slice:"1:" %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-4">
+                            <a href="{% url "catalog:category" category.slug %}" class="text-decoration-none text-dark">
+                                <div class="card mb-4 shadow-sm my_shad">
+                                    {% if category.image %}
+                                        <img src="{{ category.image.url }}" class="card-img-top img-fluid" alt="{{ category.name }}" style="object-fit: contain; width: 100%; height: 200px;">
+                                    {% else %}
+                                        <div class="placeholder-image">No Image Available</div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ category.name }}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s; /* Добавляем плавные анимации для transform и box-shadow */
+            box-shadow: 0 4px 8px  rgb(99, 128, 172);
+
+        }
+        .col-lg-4:first-child .first-card {
+            border-radius: 10px; /* Устанавливаем радиус скругления краёв */
+            overflow: hidden; /* Обрезаем все содержимое, которое выходит за границы карточки */
+        }
+        .my_shad {
+            box-shadow: 0 4px 8px rgb(99, 128, 172) !important;
+        }
+   
+        .card:hover {
+            transform: scale(1.05); /* Немного увеличиваем карточку при наведении */
+            box-shadow: 0 4px 8px  rgb(99, 128, 172);
+             /* Добавляем небольшую тень */
+        }
+        
+        .first-card {
+            height: 580px; /* Высота первой карточки */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Выравнивание элементов по началу */
+            
+        }
+        .first-card-img-wrapper {
+            flex-grow: 1; /* Заставляет изображение заполнять доступное пространство */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .first-card img {
+            max-width: 100%; /* Ограничивает ширину изображения */
+            max-height: 100%; /* Ограничивает высоту изображения */
+            object-fit: contain; /* Масштабирует изображение, сохраняя пропорции */
+        }
+        .first-card .card-body {
+            padding: 1rem; /* Добавляет отступы внутри блока с подписью */
+            background: white;
+            width: 100%; /* Заставляет тело карточки заполнять всю ширину */
+            flex-shrink: 0; /* Предотвращает сжатие подписи */
+            margin-top: auto; /* Прижимает подпись к низу карточки */
+        }
+        
+    </style>
+    
+<div id="services" class="services">
+    <div class="service my_shad" >
+        <h2 class="service-title">Профессиональный ремонт компьютерной и офисной техники</h2>
+        <p class="service-description">Наша команда специалистов готова предложить полный спектр услуг по ремонту и обслуживанию компьютеров, принтеров, МФУ и сканеров. Мы обеспечим качественное и быстрое восстановление работоспособности вашей техники. Включает в себя:</p>
+        <a href="#" class="read-more" onclick="toggleDescription(event)">Узнать больше</a>
+        <div class="full-description" style="display: none;">
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Диагностика и выявление неисправностей<span class="arrow-right"></span></li>
+                <li style="background-color: #e6f4ff; color: #555; border-radius: 5px; padding: 10px;">Ремонт аппаратной и программной части<span class="arrow-right"></span></li>
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Устранение замятий бумаги и других неполадок<span class="arrow-right"></span></li>
+            </ul>
+            <a href="#calculator" style="text-decoration: none;" class="calculator-link">Перейти к калькулятору стоимости ремонта</a>
+        </div>
+    </div>
+    <div class="service my_shad">
+        <h2 class="service-title">Профессиональный обслуживание принтеров и копировальных устройств</h2>
+        <p class="service-description">Наши высококвалифицированные специалисты предоставляют услуги по техническому обслуживанию принтеров и копировальных аппаратов. Мы гарантируем стабильную работу вашего оборудования и его долгий срок службы. Включает в себя:</p>
+        <a href="#" class="read-more" onclick="toggleDescription(event)" >Узнать больше</a>
+        <div class="full-description" style="display: none;">
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Очистка и обслуживание печатающих головок и деталей<span class="arrow-right"></span></li>
+                <li style="background-color: #e6f4ff; color: #555; border-radius: 5px; padding: 10px;">Замена расходных материалов (картриджи, барабаны и т. д.)<span class="arrow-right"></span></li>
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Настройка и оптимизация работы устройств<span class="arrow-right"></span></li>
+            </ul>
+            <a href="#calculator" class="calculator-link" style="text-decoration: none;">Перейти к калькулятору стоимости ремонта</a>
+        </div>
+    </div>
+    
+    <div class="service my_shad" >
+        <h2 class="service-title">Индивидуальная сборка персональных компьютеров</h2>
+        <p class="service-description" >Мы предлагаем услуги по индивидуальной сборке персональных компьютеров, учитывая все ваши потребности и требования. Получите надежный и производительный ПК, созданный специально для ваших задач. Включает в себя:</p>
+        <a href="#" class="read-more" onclick="toggleDescription(event)" >Узнать больше</a>
+        <div class="full-description" style="display: none;">
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Подбор оптимальных комплектующих и аксессуаров<span class="arrow-right"></span></li>
+                <li style="background-color: #e6f4ff; color: #555; border-radius: 5px; padding: 10px;">Сборка и тестирование системы<span class="arrow-right"></span></li>
+                <li style="background-color: #d4ebfc; color: #555; border-radius: 5px; padding: 10px;">Настройка программного обеспечения<span class="arrow-right"></span></li>
+            </ul>
+            <a href="#calculator" class="calculator-link" style="text-decoration: none;">Перейти к калькулятору стоимости ремонта</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDescription(event) {
+        event.preventDefault(); // Предотвращаем переход по ссылке
+
+        var description = event.target.nextElementSibling; // Получаем следующий элемент после кнопки (описание услуги)
+
+        if (description.style.display === "none") {
+            description.style.display = "block"; // Показываем описание, если оно скрыто
+            event.target.textContent = "Скрыть"; // Изменяем текст кнопки на "Скрыть"
+        } else {
+            description.style.display = "none"; // Скрываем описание, если оно отображается
+            event.target.textContent = "Узнать больше"; // Изменяем текст кнопки на "Узнать больше"
+        }
+    }
+</script>
+
+
+
+<!-- Интерактивный калькулятор стоимости ремонта -->
+<div class="calcal">
+<div id="calculator" class="calculator my_shad">
+    <h2>Калькулятор стоимости работ</h2>
+    <div class="calculator-form ">
+        <div class="form-group">
+            <label for="device-type">Выберите тип устройства:</label>
+            <select id="device-type" class="form-control" onchange="showOptions()">
+                <option value="computer">Компьютер</option>
+                <option value="printer">Принтер</option>
+                <option value="mfp">МФУ</option>
+                <option value="scanner">Сканер</option>
+            </select>
+        </div>
+        <img id="mfp-image" src="{% static "deps/images/baseavatar1.jpg" %}" alt="пк" style="max-width: 150px; display: none;">
+        <div id="computer-options" class="form-group" >
+            <label for="computer-repair">Выберите вид ремонта компьютера:</label>
+            <select id="computer-repair" class="form-control">
+                <option value="diagnostics">Диагностика и выявление неисправностей</option>
+                <option value="hardware-repair">Ремонт аппаратной части</option>
+                <option value="software-repair">Ремонт программного обеспечения</option>
+            </select>
+        </div>
+        <div id="printer-options" class="form-group" style="display: none;">
+            <label for="printer-repair">Выберите вид ремонта принтера:</label>
+            <select id="printer-repair" class="form-control">
+                <option value="diagnostics">Диагностика</option>
+                <option value="cartridge-replacement">Замена картриджа</option>
+                <option value="paper-jam-repair">Устранение замятий бумаги</option>
+            </select>
+        </div>
+
+        <div id="mfp-options" class="form-group" style="display: none;">
+            <label for="mfp-repair">Выберите вид ремонта МФУ:</label>
+            
+            <select id="mfp-repair" class="form-control">
+                
+                <option value="diagnostics">Диагностика</option>
+                <option value="scanner-repair">Ремонт сканера</option>
+                <option value="printer-repair">Ремонт принтера</option>
+            </select>
+        </div>
+        <div id="scanner-options" class="form-group" style="display: none;">
+            <label for="scanner-repair">Выберите вид ремонта сканера:</label>
+            <select id="scanner-repair" class="form-control">
+                <option value="diagnostics">Диагностика</option>
+                <option value="cleaning">Чистка</option>
+                <option value="calibration">Калибровка</option>
+            </select>
+        </div>
+        <button onclick="calculateCost()" class="btn btn-primary">Рассчитать стоимость</button>
+    </div>
+    <div id="cost-result"></div>
+</div>
+</div>
+
+
+
+<style>
+    
+    /* Стили для списка конкретных услуг */
+.service-details {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding-left: 0; /* Убираем отступ слева */
+    font-family: 'Arial', sans-serif; /* Используем шрифт Arial или аналогичный */
+}
+
+.service-details li {
+    position: relative; /* Позиционируем элементы списка относительно их родителя */
+    padding-left: 20px; /* Добавляем отступ слева */
+    margin-bottom: 8px; /* Отступ между элементами списка */
+    line-height: 1.6; /* Межстрочный интервал */
+}
+
+.service-details li:before {
+    content: "•"; /* Устанавливаем символ "•" в качестве маркера списка */
+    color: #ff7f50; /* Цвет маркера */
+    font-size: 18px; /* Размер шрифта маркера */
+    position: absolute; /* Позиционируем маркер абсолютно */
+    left: -15px; /* Выравниваем маркер по левому краю */
+    top: 2px; /* Выравниваем маркер по верхнему краю */
+}
+    
+.arrow-right {
+    position: absolute;
+    right: -20px; /* Расстояние от текста до стрелки */
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid black; /* Цвет стрелки */
+    transform: translateY(-50%);
+}
+    
+.calculator {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    width: 600px;
+    margin-bottom: 20px; /* Добавляем отступ снизу */
+    text-align: center;
+    box-shadow: 0 4px 8px  rgb(99, 128, 172); 
+}
+.calcal {
+    display: flex;
+    justify-content: center;
+
+
+}
+    .calculator h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .my_shad {
+        box-shadow: 0 4px 8px  rgb(99, 128, 172); 
+    }
+    .calculator-link {
+        color: rgb(99, 128, 172);
+    }
+
+
+    .calculator-form {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #343a40;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #cost-result {
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+
+
+</style>
+
+<script>
+    function showOptions() {
+        var deviceType = document.getElementById("device-type").value;
+        document.getElementById("computer-options").style.display = (deviceType === "computer") ? "block" : "none";
+        document.getElementById("printer-options").style.display = (deviceType === "printer") ? "block" : "none";
+        document.getElementById("mfp-options").style.display = (deviceType === "mfp") ? "block" : "none";
+        document.getElementById("scanner-options").style.display = (deviceType === "scanner") ? "block" : "none";
+    }
+
+
+
+
+        function calculateCost() {
+            var deviceType = document.getElementById("device-type").value;
+            var repairType = "";
+        
+            // Получение выбранного типа ремонта в зависимости от выбранного устройства
+            if (deviceType === "computer") {
+                repairType = document.getElementById("computer-repair").value;
+            } else if (deviceType === "printer") {
+                repairType = document.getElementById("printer-repair").value;
+            } else if (deviceType === "mfp") {
+                repairType = document.getElementById("mfp-repair").value;
+            } else if (deviceType === "scanner") {
+                repairType = document.getElementById("scanner-repair").value;
+            }
+        
+
+        // Простейшая логика определения стоимости на примере
+        if (deviceType === "computer") {
+            if (repairType === "diagnostics") {
+                cost = 1000;
+            } else if (repairType === "hardware-repair") {
+                cost = 2000;
+            } else if (repairType === "software-repair") {
+                cost = 500;
+            }
+        } else if (deviceType === "printer") {
+            if (repairType === "diagnostics") {
+                cost = 800;
+            } else if (repairType === "cartridge-replacement") {
+                cost = 400;
+            } else if (repairType === "paper-jam-repair") {
+                cost = 300;
+            }
+        } else if (deviceType === "mfp") {
+            if (repairType === "diagnostics") {
+                cost = 1200;
+            } else if (repairType === "scanner-repair") {
+                cost = 2500;
+            } else if (repairType === "printer-repair") {
+                cost = 2000;
+            }
+        } else if (deviceType === "scanner") {
+            if (repairType === "diagnostics") {
+                cost = 800;
+            } else if (repairType === "cleaning") {
+                cost = 600;
+            } else if (repairType === "calibration") {
+                cost = 1000;
+            }
+        }
+
+        var resultElement = document.getElementById("cost-result");
+        resultElement.innerHTML = '<span style="font-size: larger; color: rgb(99, 128, 172); font-weight: bold;">Примерная стоимость ремонта: от ' + cost + ' рублей</span>';
+    }
+</script>
+
+<!-- Блок "ПОЧЕМУ МЫ" -->
+<div class="why-us my_shad ">
+    <h2 class="section-title">ПОЧЕМУ МЫ</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="reason-title">Высокое качество ремонта</h3>
+            <p class="reason-description">Мы настолько уверены в квалификации своих мастеров, что даем гарантию 5 лет на свои услуги.</p>
+        </div>
+        <div class="col-md-4">
+            <h3 class="reason-title">Опыт 18 лет</h3>
+            <p class="reason-description">Мы добросовестно работаем с 2006 года. Мы помогли нескольким тысячам клиентов.</p>
+        </div>
+        <div class="col-md-4">
+            <h3 class="reason-title">Скидки постоянным клиентам</h3>
+            <p class="reason-description">Мы любим своих клиентов, поэтому предлагаем самые выгодные условия и подарки.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стили для блока "ПОЧЕМУ МЫ" */
+    .why-us {
+        background-color: #f8f9fa;
+        padding: 40px 0;
+        text-align: center;
+        border-radius: 10px; /* Устанавливаем радиус скругления краёв */
+        max-width: 1200px; /* Увеличим максимальную ширину блока "Почему мы" */
+        margin: 0 auto; /* Центрируем блок на странице */
+        
+        margin-right: auto; /* Отодвигаем блок "Почему мы" влево */
+        margin-left: 0; /* Сбросим отступ слева */
+
+
+    }
+
+    .why-us .section-title {
+        font-size: 36px;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .why-us .reason-title {
+        font-size: 24px;
+        color: rgb(99, 128, 172);
+        margin-bottom: 20px;
+    }
+
+    .why-us .reason-description {
+        font-size: 18px;
+        color: #555;
+    }
+
+    .why-us .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .why-us .col-md-4 {
+        flex: 1;
+        margin: 0 20px;
+    }
+
+    @media (max-width: 768px) {
+        .why-us .col-md-4 {
+            margin: 20px 0;
+        }
+    }
+</style>
+
+    {% endblock %}
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="text-white mb-1 " >&#xfeff Часы работы:</p>
+                <p class="text-white mb-1">Пн 09:00–18:00</p>
+                <p class="text-white mb-1">Вт  &#xfeff 09:00–18:00</p>
+                <p class="text-white mb-1">Ср 09:00–18:00</p>
+                <p class="text-white mb-1">Чт  09:00–18:00</p>
+                <p class="text-white mb-1">Пт 09:00–18:00</p>
+                <p class="text-white mb-1">Сб &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff –     </p>
+                <p class="text-white mb-1">Вс &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff  &#xfeff &#xfeff &#xfeff –     </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <p class="m-0 text-white">+7 (383) 213‒24‒11</p>
+                <p class="m-0 text-white">+7 (383) 201‒05‒00 <br> <br><br><br><br><br>© АКСИ-СЕРВИС <br>  Торгово-сервисная компания</p>
+            </div>
+            <div class="col-md-2">
+                <p class="text-white mb-0   text-end">Улица Челюскинцев, 18/2 604 офис; 6 этаж</p>
+                <p class="text-white mb-0  text-end">Челюскинский ж/м, Железнодорожный район, Новосибирск, 630132</p>
+            </div>
+        
+            <div class="col-md-1">
+                <div class="row">
+                    <div class="col-12 map-container">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ae13020f42f19cac0baf8cb2e2c63bd72f46dc090149e32b3deb348337ef10f2e&amp;width=315&amp;height=215&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+

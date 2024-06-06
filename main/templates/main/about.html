@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+    <style>
+        .information-container {
+            margin: 50px auto;
+            max-width: 1100px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgb(99, 128, 172);
+        }
+
+        .information-container h2 {
+            color: rgb(99, 128, 172);
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .information-container p, .information-container ul {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .map-container {
+            margin-top: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgb(99, 128, 172);
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: rgb(99, 128, 172);
+        }
+
+        .footer-info {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .inf {
+            font-size: 46px;
+        }
+
+        .inf2 {
+            font-size: 22px;
+        }
+
+        .inf3 {
+            font-size: 32px;
+        }
+
+        .inf4 {
+            font-size: 22px;
+        }
+
+        footer {
+            position: relative; /* изменено на relative */
+            width: 100%;
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px; /* добавлен отступ сверху */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
+    </style>
+{% endblock %}
+
+{% block modal_cart %}
+    {% include "includes/cart_button.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <h1 class="inf">О Торгово-сервисной компании "АКСИ-СЕРВИС"</h1>
+        <div class="information-container">
+            <h6 class="inf2">Торгово-сервисная компания <span class="highlight">"Акси-сервис"</span> занимается ремонтом электротехники различных видов. Не включается плеер или электронная книга? Мы примем ваше устройство на ремонт и вернем ему жизнь.</h6>
+            <h5 class="inf2">Мы находимся по адресу: <span class="highlight">улица Челюскинцев, 18/2</span>, рядом с метро <span class="highlight">Площадь Гарина-Михайловского</span>.</h5>
+            <h4 class="inf2">График работы: Пн-пт: <span class="highlight">09:00 - 18:00</span>.</h4>
+            
+            <h3 class="inf3">Услуги:</h3>
+            <ul>
+                <li class="inf4">Ремонт компьютерной техники</li>
+                <li class="inf4">Ремонт оргтехники</li>
+                <li class="inf4">Ремонт принтеров и МФУ</li>
+                <li class="inf4">Заправка картриджей</li>
+                <li class="inf4">Ремонт электроники</li>
+                <li class="inf4">Индивидуальная сборка компьютеров</li>
+            </ul>
+            
+            <h3 class="inf3">Регистрационные данные:</h3>
+            <ul>
+                <li class="inf4"><span class="highlight">ОГРН:</span> 1065410041641</li>
+                <li class="inf4"><span class="highlight">ИНН/КПП:</span> 5410008115 / 540701001</li>
+                <li class="inf4"><span class="highlight">Дата регистрации:</span> 14.08.2006</li>
+                <li class="inf4"><span class="highlight">Юридический адрес:</span> 630132, Новосибирская область, г. Новосибирск, ул. Челюскинцев, д. 18/2, офис 604</li>
+                <li class="inf4"><span class="highlight">Организационно-правовая форма:</span> Общество с ограниченной ответственностью</li>
+            </ul>
+            
+            <div class="map-container">
+                <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ae13020f42f19cac0baf8cb2e2c63bd72f46dc090149e32b3deb348337ef10f2e&amp;width=1100&amp;height=215&amp;lang=ru_RU&amp;scroll=true"></script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="footer">
+        <p>© АКСИ-СЕРВИС <br> Торгово-сервисная компания</p>
+    </footer>
+{% endblock %}
